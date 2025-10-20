@@ -123,4 +123,22 @@ export function useSimilarMovies(id?: number) {
   });
 }
 
+export type PersonDetails = {
+  id: number;
+  name: string;
+  biography?: string | null;
+  profile_path: string | null;
+  known_for_department?: string | null;
+  birthday?: string | null;
+  place_of_birth?: string | null;
+};
+
+export function usePersonDetails(id?: number) {
+  return useQuery({
+    queryKey: ['person', id],
+    queryFn: () => getJson<PersonDetails>(`person/${id}`),
+    enabled: !!id,
+  });
+}
+
 
