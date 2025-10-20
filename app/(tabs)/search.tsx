@@ -2,6 +2,7 @@ import { PosterGrid } from '@/components/movie/PosterGrid';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { SearchBar } from '@/components/ui/SearchBar';
+import { TabScene } from '@/components/ui/TabScene';
 import { useSearchMovies } from '@/hooks/queries';
 import React, { useState } from 'react';
 import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
@@ -33,16 +34,18 @@ export default function SearchScreen() {
 
   return (
     <>
-      <SearchBar value={q} onChangeText={setQ} />
-      <PosterGrid
-        items={items}
-        isLoading={isLoading}
-        isFetchingNextPage={isFetchingNextPage}
-        refetch={refetch}
-        onEndReached={() => {
-          if (hasNextPage) fetchNextPage();
-        }}
-      />
+      <TabScene>
+        <SearchBar value={q} onChangeText={setQ} />
+        <PosterGrid
+          items={items}
+          isLoading={isLoading}
+          isFetchingNextPage={isFetchingNextPage}
+          refetch={refetch}
+          onEndReached={() => {
+            if (hasNextPage) fetchNextPage();
+          }}
+        />
+      </TabScene>
     </>
   );
 }
