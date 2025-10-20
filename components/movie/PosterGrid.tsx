@@ -20,7 +20,18 @@ function PosterGridComponent({ items, isLoading, isFetchingNextPage, refetch, on
   const cardWidth = (width - gap * (columns + 1)) / columns;
   const surfaceAlt = useThemeColor({}, 'surfaceAlt' as any);
 
+  // Calculate fixed item height for getItemLayout optimization
+  // Card height: poster(220) + meta padding(20) + title minHeight(36) + gap(6) + grid gap(12) = 294px
+  const ITEM_HEIGHT = 294;
+
   const keyExtractor = useCallback((m: MovieSummary, index: number) => `${m.id}-${index}`, []);
+
+  // getItemLayout for VirtualizedList optimization - enables better scrolling performance
+  const getItemLayout = useCallback((data: ArrayLike<MovieSummary> | null | undefined, index: number) => ({
+    length: ITEM_HEIGHT,
+    offset: ITEM_HEIGHT * index,
+    index,
+  }), []);
 
   // Memoize renderItem function to prevent recreation on every render
   const renderItem = useCallback(({ item }: { item: MovieSummary }) => (
@@ -55,6 +66,21 @@ function PosterGridComponent({ items, isLoading, isFetchingNextPage, refetch, on
       onEndReached={onEndReached}
       refreshControl={refreshControl}
       ListFooterComponent={ListFooterComponent}
+      // VirtualizedList performance optimizations
+      getItemLayout={getItemLayout}
+      removeClippedSubviews={true}
+      initialNumToRender={10}
+      maxToRenderPerBatch={5}
+      windowSize={10}
+      updateCellsBatchingPeriod={50}
+      // Additional performance props
+      maintainVisibleContentPosition={{
+        minIndexForVisible: 0,
+        autoscrollToTopThreshold: 10,
+      }}
+      // Optimize for better scrolling
+      scrollEventThrottle={16}
+      disableVirtualization={false}
     />
   );
 }
