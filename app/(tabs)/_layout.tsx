@@ -3,6 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
+import { HeaderActions } from '@/components/ui/HeaderActions';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -16,6 +17,14 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].navActive,
         headerStyle: { backgroundColor: Colors[colorScheme ?? 'light'].headerBackground },
         headerTintColor: Colors[colorScheme ?? 'light'].headerText,
+        headerTitleAlign: 'left',
+        headerTitleStyle: { fontSize: 18, fontWeight: '600' },
+        headerRight: () => (
+          <HeaderActions
+            onPressSearch={() => {}}
+            onPressFavorites={() => {}}
+          />
+        ),
         headerShadowVisible: false,
         tabBarStyle: {
           backgroundColor: Colors[colorScheme ?? 'light'].surface,
