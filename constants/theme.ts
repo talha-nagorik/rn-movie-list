@@ -5,25 +5,37 @@
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+// Pastel palette tuned to main background #d7c8b4 with a cool complementary tint
+const tintColorLight = '#6f8aa6';
+const tintColorDark = '#9fb4c8';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    text: '#2a2a2a',
+    background: '#d7c8b4',
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
+    icon: '#6f7c86',
+    tabIconDefault: '#6f7c86',
     tabIconSelected: tintColorLight,
+    // New roles
+    surface: '#efe7dc', // controls cards / tab bar
+    card: '#f5efe6', // individual card backgrounds
+    headerBackground: '#cbb89d',
+    headerText: '#2a2a2a',
+    border: '#c9bba8',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
+    text: '#e9ecf2',
+    background: '#141923',
     tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
+    icon: '#a9b2c0',
+    tabIconDefault: '#a9b2c0',
     tabIconSelected: tintColorDark,
+    surface: '#1b2230',
+    card: '#222938',
+    headerBackground: '#1a2130',
+    headerText: '#e9ecf2',
+    border: '#2b3445',
   },
 };
 

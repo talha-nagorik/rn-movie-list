@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: '#f7f9fc',
+    backgroundColor: '#f5efe6',
   },
   poster: {
     width: '100%',
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   posterFallback: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#d9e4ff',
+    backgroundColor: '#d6e2ec',
   },
   fallbackText: {
     fontSize: 18,
@@ -81,14 +81,14 @@ const styles = StyleSheet.create({
   },
   rating: {
     fontSize: 12,
-    color: '#274060',
+    color: '#354a5f',
   },
   heart: {
     fontSize: 16,
-    color: '#9aa5b1',
+    color: '#7a8b99',
   },
   heartActive: {
-    color: '#ff6b6b',
+    color: '#d85b5b',
   },
 });
 
