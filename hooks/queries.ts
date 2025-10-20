@@ -16,6 +16,8 @@ export type MovieDetails = MovieSummary & {
   runtime?: number;
   homepage?: string | null;
   status?: string;
+  tagline?: string | null;
+  vote_count?: number;
 };
 
 type Cursor = number | undefined;
@@ -90,6 +92,34 @@ export function useMovieDetails(id?: number) {
     queryKey: ['movie', id],
     queryFn: () => getJson<MovieDetails>(`movie/${id}`),
     enabled: !!id,
+  });
+}
+
+export type Credits = {
+  id: number;
+  cast: {
+    id: number;
+    name: string;
+    character?: string;
+    profile_path: string | null;
+    order?: number;
+  }[];
+};
+
+export function useMovieCredits(id?: number) {
+  return useQuery({
+    queryKey: ['movie', id, 'credits'],
+    queryFn: () => getJson<Credits>(`movie/${id}/credits`),
+    enabled: !!id,
+  });
+}
+
+export function useSimilarMovies(id?: number) {
+  return useQuery({
+    queryKey: ['movie', id, 'similar'],
+    queryFn: () => getJson<PaginatedResponse<MovieSummary>>(`movie/${id}/similar`, { page: 1 }),
+    enabled: !!id,
+    select: (data) => data.results,
   });
 }
 
