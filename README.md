@@ -25,6 +25,24 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## TanStack Query Integration
+
+Provider with online status and app focus lives in `providers/QueryProvider.tsx`. To disable queries on out-of-focus screens, use:
+
+```tsx
+import { useQuery } from '@tanstack/react-query'
+import { useSubscribedByScreenFocus } from '@/hooks/useSubscribedByScreenFocus'
+
+function Example() {
+  const subscribed = useSubscribedByScreenFocus()
+  const { data } = useQuery({
+    queryKey: ['movies'],
+    queryFn: fetchMovies,
+    subscribed,
+  })
+}
+```
+
 ## Get a fresh project
 
 When you're ready, run:
