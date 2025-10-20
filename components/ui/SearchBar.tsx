@@ -1,25 +1,24 @@
 import { useThemeColor } from '@/hooks/use-theme-color';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View, type TextInputSubmitEditingEvent } from 'react-native';
 
 type Props = {
   value: string;
   onChangeText: (t: string) => void;
   placeholder?: string;
-  debounceMs?: number;
+  onSubmit?: (t: string) => void;
 };
 
-export function SearchBar({ value, onChangeText, placeholder = 'Search movies…', debounceMs = 250 }: Props) {
+export function SearchBar({ value, onChangeText, placeholder = 'Search movies…', onSubmit }: Props) {
   const [text, setText] = useState(value);
-  const inputBg = useThemeColor({}, 'inputBg' as any);
-  const inputBorder = useThemeColor({}, 'inputBorder' as any);
-  const textMuted = useThemeColor({}, 'textMuted' as any);
-  const focus = useThemeColor({}, 'focus' as any);
+  const inputBg = useThemeColor({}, 'inputBg');
+  const inputBorder = useThemeColor({}, 'inputBorder');
+  const textMuted = useThemeColor({}, 'textMuted');
+  const focus = useThemeColor({}, 'focus');
   useEffect(() => setText(value), [value]);
   useEffect(() => {
-    const id = setTimeout(() => onChangeText(text), debounceMs);
-    return () => clearTimeout(id);
-  }, [text, onChangeText, debounceMs]);
+    onChangeText(text);
+  }, [text, onChangeText]);
 
   return (
     <View style={styles.container}>
@@ -33,6 +32,9 @@ export function SearchBar({ value, onChangeText, placeholder = 'Search movies…
         clearButtonMode="while-editing"
         autoCapitalize="none"
         selectionColor={focus}
+        onSubmitEditing={(e: TextInputSubmitEditingEvent) => {
+          if (onSubmit) onSubmit(text.trim());
+        }}
       />
     </View>
   );

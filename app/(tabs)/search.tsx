@@ -4,38 +4,24 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { TabScene } from '@/components/ui/TabScene';
 import { useSearchMovies } from '@/hooks/queries';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import React, { useState } from 'react';
-import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function SearchScreen() {
   const [q, setQ] = useState('');
-  const { data, refetch, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, isError } = useSearchMovies(q);
+  const debouncedQ = useDebouncedValue(q, 350);
+  const { data, refetch, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, isError } = useSearchMovies(debouncedQ);
   const items = data?.items ?? [];
-
-  if (!q.trim()) {
-    return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <SearchBar value={q} onChangeText={setQ} />
-          <EmptyState title="Search movies" message="Type to find titles." />
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
-
-  if (isError) {
-    return (
-      <>
-        <SearchBar value={q} onChangeText={setQ} />
-        <ErrorState onRetry={refetch} />
-      </>
-    );
-  }
+  const hasQuery = q.trim().length > 0;
 
   return (
-    <>
-      <TabScene>
-        <SearchBar value={q} onChangeText={setQ} />
+    <TabScene>
+      <SearchBar value={q} onChangeText={setQ} onSubmit={(t) => setQ(t)} />
+      {!hasQuery ? (
+        <EmptyState title="Search movies" message="Type to find titles." />
+      ) : isError ? (
+        <ErrorState onRetry={refetch} />
+      ) : (
         <PosterGrid
           items={items}
           isLoading={isLoading}
@@ -45,8 +31,8 @@ export default function SearchScreen() {
             if (hasNextPage) fetchNextPage();
           }}
         />
-      </TabScene>
-    </>
+      )}
+    </TabScene>
   );
 }
 
