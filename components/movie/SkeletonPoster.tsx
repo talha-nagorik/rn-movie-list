@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
-export function SkeletonPoster() {
+function SkeletonPosterComponent() {
   const base = useThemeColor({}, 'skeletonBase' as any);
   const highlight = useThemeColor({}, 'skeletonHighlight' as any);
   const t = useSharedValue(0);
@@ -26,5 +26,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8ecf1',
   },
 });
+
+// Export memoized component (no props, so no comparison needed)
+export const SkeletonPoster = React.memo(SkeletonPosterComponent);
 
 

@@ -9,7 +9,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 
 type Props = { movie: MovieSummary; width: number };
 
-export function PosterCard({ movie, width }: Props) {
+function PosterCardComponent({ movie, width }: Props) {
   const scale = useSharedValue(1);
   const { isFavorite, toggleFavorite } = useFavorites();
   const posterUri = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : undefined;
@@ -104,5 +104,20 @@ const styles = StyleSheet.create({
     color: '#7a8b99',
   },
 });
+
+// Custom comparison function for React.memo
+const areEqual = (prevProps: Props, nextProps: Props) => {
+  // Compare movie object properties that affect rendering
+  return (
+    prevProps.movie.id === nextProps.movie.id &&
+    prevProps.movie.title === nextProps.movie.title &&
+    prevProps.movie.poster_path === nextProps.movie.poster_path &&
+    prevProps.movie.vote_average === nextProps.movie.vote_average &&
+    prevProps.width === nextProps.width
+  );
+};
+
+// Export memoized component
+export const PosterCard = React.memo(PosterCardComponent, areEqual);
 
 

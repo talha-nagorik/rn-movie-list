@@ -1,6 +1,6 @@
 import type { MovieSummary } from '@/hooks/queries';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { FlatList, RefreshControl, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { PosterCard } from './PosterCard';
 import { SkeletonPoster } from './SkeletonPoster';
@@ -13,7 +13,7 @@ type Props = {
   onEndReached?: () => void;
 };
 
-export function PosterGrid({ items, isLoading, isFetchingNextPage, refetch, onEndReached }: Props) {
+function PosterGridComponent({ items, isLoading, isFetchingNextPage, refetch, onEndReached }: Props) {
   const { width } = useWindowDimensions();
   const columns = width >= 768 ? 3 : 2;
   const gap = 12;
@@ -22,6 +22,27 @@ export function PosterGrid({ items, isLoading, isFetchingNextPage, refetch, onEn
 
   const keyExtractor = useCallback((m: MovieSummary, index: number) => `${m.id}-${index}`, []);
 
+  // Memoize renderItem function to prevent recreation on every render
+  const renderItem = useCallback(({ item }: { item: MovieSummary }) => (
+    <PosterCard movie={item} width={cardWidth} />
+  ), [cardWidth]);
+
+  // Memoize ListFooterComponent to prevent recreation
+  const ListFooterComponent = useMemo(() => {
+    if (!isFetchingNextPage) return null;
+    return (
+      <View style={styles.footerRow}>
+        <View style={{ width: cardWidth }}><SkeletonPoster /></View>
+        <View style={{ width: cardWidth }}><SkeletonPoster /></View>
+      </View>
+    );
+  }, [isFetchingNextPage, cardWidth]);
+
+  // Memoize refreshControl to prevent recreation
+  const refreshControl = useMemo(() => (
+    <RefreshControl refreshing={!!isLoading} onRefresh={refetch ?? (() => undefined)} />
+  ), [isLoading, refetch]);
+
   return (
     <FlatList
       data={items}
@@ -29,16 +50,11 @@ export function PosterGrid({ items, isLoading, isFetchingNextPage, refetch, onEn
       numColumns={columns}
       columnWrapperStyle={{ gap, paddingHorizontal: gap }}
       contentContainerStyle={{ gap, paddingVertical: gap, backgroundColor: surfaceAlt }}
-      renderItem={({ item }) => <PosterCard movie={item} width={cardWidth} />}
+      renderItem={renderItem}
       onEndReachedThreshold={0.5}
       onEndReached={onEndReached}
-      refreshControl={<RefreshControl refreshing={!!isLoading} onRefresh={refetch ?? (() => undefined)} />}
-      ListFooterComponent={isFetchingNextPage ? (
-        <View style={styles.footerRow}>
-          <View style={{ width: cardWidth }}><SkeletonPoster /></View>
-          <View style={{ width: cardWidth }}><SkeletonPoster /></View>
-        </View>
-      ) : null}
+      refreshControl={refreshControl}
+      ListFooterComponent={ListFooterComponent}
     />
   );
 }
@@ -50,5 +66,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 });
+
+// Custom comparison function for React.memo
+const areEqual = (prevProps: Props, nextProps: Props) => {
+  // Compare arrays by length and reference (shallow comparison)
+  // For deeper comparison, we could compare each item, but that might be expensive
+  return (
+    prevProps.items === nextProps.items &&
+    prevProps.isLoading === nextProps.isLoading &&
+    prevProps.isFetchingNextPage === nextProps.isFetchingNextPage &&
+    prevProps.refetch === nextProps.refetch &&
+    prevProps.onEndReached === nextProps.onEndReached
+  );
+};
+
+// Export memoized component
+export const PosterGrid = React.memo(PosterGridComponent, areEqual);
 
 
