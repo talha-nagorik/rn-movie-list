@@ -4,7 +4,7 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { useSearchMovies } from '@/hooks/queries';
 import React, { useState } from 'react';
-import { Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function SearchScreen() {
   const [q, setQ] = useState('');
@@ -14,10 +14,10 @@ export default function SearchScreen() {
   if (!q.trim()) {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <>
+        <View>
           <SearchBar value={q} onChangeText={setQ} />
           <EmptyState title="Search movies" message="Type to find titles." />
-        </>
+        </View>
       </TouchableWithoutFeedback>
     );
   }

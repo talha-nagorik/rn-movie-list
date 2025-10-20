@@ -73,6 +73,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: '600',
+    lineHeight: 18,
+    minHeight: 36, // reserve space for up to 2 lines to equalize card heights
   },
   row: {
     flexDirection: 'row',

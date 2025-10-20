@@ -18,7 +18,7 @@ export function PosterGrid({ items, isLoading, isFetchingNextPage, refetch, onEn
   const gap = 12;
   const cardWidth = (width - gap * (columns + 1)) / columns;
 
-  const keyExtractor = useCallback((m: MovieSummary) => String(m.id), []);
+  const keyExtractor = useCallback((m: MovieSummary, index: number) => `${m.id}-${index}`, []);
 
   return (
     <FlatList

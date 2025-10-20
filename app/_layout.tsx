@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryProvider } from '../providers/QueryProvider';
@@ -18,7 +19,14 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <QueryProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack>
+          <Stack
+            screenOptions={{
+              contentStyle: { backgroundColor: Colors[colorScheme ?? 'light'].background },
+              headerStyle: { backgroundColor: Colors[colorScheme ?? 'light'].headerBackground },
+              headerTintColor: Colors[colorScheme ?? 'light'].headerText,
+              headerShadowVisible: false,
+            }}
+          >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
             <Stack.Screen name="movie/[id]" options={{ presentation: 'modal' }} />
