@@ -1,3 +1,4 @@
+import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -8,13 +9,16 @@ type Props = {
 };
 
 export function ErrorState({ title = 'Something went wrong', message = 'Please try again.', onRetry }: Props) {
+  const error = useThemeColor({}, 'error' as any);
+  const textOnAccent = useThemeColor({}, 'textOnAccent' as any);
+  const accent = useThemeColor({}, 'accent' as any);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.message}>{message}</Text>
+      <Text style={[styles.message, { color: error }]}>{message}</Text>
       {onRetry ? (
-        <Pressable onPress={onRetry} style={styles.button}>
-          <Text style={styles.buttonText}>Retry</Text>
+        <Pressable onPress={onRetry} style={[styles.button, { backgroundColor: accent }] }>
+          <Text style={[styles.buttonText, { color: textOnAccent }]}>Retry</Text>
         </Pressable>
       ) : null}
     </View>

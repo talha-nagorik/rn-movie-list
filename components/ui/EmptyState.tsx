@@ -1,3 +1,4 @@
+import { useThemeColor } from '@/hooks/use-theme-color';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -7,10 +8,11 @@ type Props = {
 };
 
 export function EmptyState({ title = 'Nothing here', message = 'Try searching or check back later.' }: Props) {
+  const muted = useThemeColor({}, 'textMuted' as any);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.message}>{message}</Text>
+      <Text style={[styles.message, { color: muted }]}>{message}</Text>
     </View>
   );
 }

@@ -12,7 +12,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].navActive,
         headerStyle: { backgroundColor: Colors[colorScheme ?? 'light'].headerBackground },
         headerTintColor: Colors[colorScheme ?? 'light'].headerText,
         headerShadowVisible: false,
@@ -20,9 +20,11 @@ export default function TabLayout() {
           backgroundColor: Colors[colorScheme ?? 'light'].surface,
           borderTopColor: Colors[colorScheme ?? 'light'].border,
         },
+        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].navInactive,
         tabBarButton: HapticTab,
         sceneStyle: { backgroundColor: Colors[colorScheme ?? 'light'].background },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{

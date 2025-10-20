@@ -1,4 +1,5 @@
 import type { MovieSummary } from '@/hooks/queries';
+import { useThemeColor } from '@/hooks/use-theme-color';
 import React, { useCallback } from 'react';
 import { FlatList, RefreshControl, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { PosterCard } from './PosterCard';
@@ -17,6 +18,7 @@ export function PosterGrid({ items, isLoading, isFetchingNextPage, refetch, onEn
   const columns = width >= 768 ? 3 : 2;
   const gap = 12;
   const cardWidth = (width - gap * (columns + 1)) / columns;
+  const surfaceAlt = useThemeColor({}, 'surfaceAlt' as any);
 
   const keyExtractor = useCallback((m: MovieSummary, index: number) => `${m.id}-${index}`, []);
 
@@ -26,7 +28,7 @@ export function PosterGrid({ items, isLoading, isFetchingNextPage, refetch, onEn
       keyExtractor={keyExtractor}
       numColumns={columns}
       columnWrapperStyle={{ gap, paddingHorizontal: gap }}
-      contentContainerStyle={{ gap, paddingVertical: gap }}
+      contentContainerStyle={{ gap, paddingVertical: gap, backgroundColor: surfaceAlt }}
       renderItem={({ item }) => <PosterCard movie={item} width={cardWidth} />}
       onEndReachedThreshold={0.5}
       onEndReached={onEndReached}

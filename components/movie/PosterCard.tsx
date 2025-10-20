@@ -1,4 +1,5 @@
 import type { MovieSummary } from '@/hooks/queries';
+import { useThemeColor } from '@/hooks/use-theme-color';
 import { useFavorites } from '@/state/favorites';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
@@ -12,6 +13,11 @@ export function PosterCard({ movie, width }: Props) {
   const scale = useSharedValue(1);
   const { isFavorite, toggleFavorite } = useFavorites();
   const posterUri = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : undefined;
+  const cardBg = useThemeColor({}, 'card');
+  const border = useThemeColor({}, 'border');
+  const ratingColor = useThemeColor({}, 'textMuted');
+  const heartColor = useThemeColor({}, 'icon');
+  const heartActive = useThemeColor({}, 'error');
 
   const rStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
@@ -20,21 +26,28 @@ export function PosterCard({ movie, width }: Props) {
       <Pressable
         onPressIn={() => (scale.value = withTiming(0.98, { duration: 100 }))}
         onPressOut={() => (scale.value = withTiming(1, { duration: 120 }))}
+        accessibilityRole="button"
+        accessibilityLabel={`Open ${movie.title}`}
         style={{ width }}>
-        <Animated.View style={[styles.card, rStyle]}> 
+        <Animated.View style={[styles.card, { backgroundColor: cardBg, borderColor: border }, rStyle]}> 
           {posterUri ? (
             <Image source={{ uri: posterUri }} style={styles.poster} transition={150} contentFit="cover" />
           ) : (
-            <View style={[styles.poster, styles.posterFallback]}>
+            <View style={[styles.poster, styles.posterFallback] }>
               <Text style={styles.fallbackText}>{movie.title.slice(0, 2).toUpperCase()}</Text>
             </View>
           )}
           <View style={styles.meta}>
             <Text style={styles.title} numberOfLines={2}>{movie.title}</Text>
             <View style={styles.row}>
-              <Text style={styles.rating}>★ {movie.vote_average?.toFixed(1) ?? '–'}</Text>
+              <Text accessibilityLabel={`Rating ${movie.vote_average?.toFixed(1) ?? 'unknown'}`} style={[styles.rating, { color: ratingColor }]}>★ {movie.vote_average?.toFixed(1) ?? '–'}</Text>
               <Pressable onPress={() => toggleFavorite(movie)} hitSlop={10}>
-                <Text style={[styles.heart, isFavorite(movie.id) && styles.heartActive]}>♥</Text>
+                <Text
+                  accessibilityRole="button"
+                  accessibilityLabel={isFavorite(movie.id) ? 'Remove from favorites' : 'Add to favorites'}
+                  style={[styles.heart, { color: heartColor }, isFavorite(movie.id) && { color: heartActive }]}>
+                  ♥
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -49,6 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     backgroundColor: '#f5efe6',
+    borderWidth: 1,
   },
   poster: {
     width: '100%',
@@ -88,9 +102,6 @@ const styles = StyleSheet.create({
   heart: {
     fontSize: 16,
     color: '#7a8b99',
-  },
-  heartActive: {
-    color: '#d85b5b',
   },
 });
 

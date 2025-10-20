@@ -1,3 +1,4 @@
+import { useThemeColor } from '@/hooks/use-theme-color';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
@@ -10,6 +11,10 @@ type Props = {
 
 export function SearchBar({ value, onChangeText, placeholder = 'Search movies…', debounceMs = 250 }: Props) {
   const [text, setText] = useState(value);
+  const inputBg = useThemeColor({}, 'inputBg' as any);
+  const inputBorder = useThemeColor({}, 'inputBorder' as any);
+  const textMuted = useThemeColor({}, 'textMuted' as any);
+  const focus = useThemeColor({}, 'focus' as any);
   useEffect(() => setText(value), [value]);
   useEffect(() => {
     const id = setTimeout(() => onChangeText(text), debounceMs);
@@ -22,10 +27,12 @@ export function SearchBar({ value, onChangeText, placeholder = 'Search movies…
         value={text}
         onChangeText={setText}
         placeholder={placeholder}
-        style={styles.input}
+        placeholderTextColor={textMuted}
+        style={[styles.input, { backgroundColor: inputBg, borderColor: inputBorder }]}
         returnKeyType="search"
         clearButtonMode="while-editing"
         autoCapitalize="none"
+        selectionColor={focus}
       />
     </View>
   );
@@ -40,6 +47,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderRadius: 12,
+    borderWidth: 1,
   },
 });
 
